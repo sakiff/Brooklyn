@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { Button } from './Button'
 import { VscArrowRight } from 'react-icons/vsc'
@@ -21,11 +21,48 @@ const HeroWrapper = styled.div`
   position: relative;
 `
 
-const HeroSlide = styled.div``
-const HeroSlider = styled.div``
-const HeroImage = styled.div``
+const HeroSlide = styled.div`
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+`
+const HeroSlider = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-conent: center;
+  background: rgba(21, 21, 21, 0.59);
+`
+const HeroImage = styled.img`
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+`
 const HeroContent = styled.div`
   margin: 5rem;
+  z-index: 1;
+  color: #fff;
+  align-items: center;
+  justify-content: left;
+  text-transform: uppercase;
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+
+  h1 {
+    font-size: clamp(1rem, 6vw, 4rem);
+    margin-bottom: 0.5rem;
+  }
+  p {
+    font-size: clamp(0.75rem, 6vw, 2rem);
+    margin-bottom: 0.25rem;
+  }
 `
 const SliderButton = styled.div`
   position: absolute;
@@ -51,6 +88,10 @@ const arrowButtons = css`
       transform: scale(1.05);
   }
 `
+
+const Arrow = styled(VscArrowRight)`
+  margin-left: 0.5rem;
+`
 const SliderPrevBtn = styled(FaArrowCircleLeft)`
   ${arrowButtons}
 `
@@ -59,34 +100,66 @@ const SliderNextBtn = styled(FaArrowCircleRight)`
 `
 
 const Hero = ({ slides }) => {
+  //function for slider buttons
+  const [current, setCurrent] = useState(0)
+  const length = slides.length
+  const timeout = useRef(null)
+
+  // useEffect(() => {
+  //   const nextSlide = () => {
+  //     setCurrent((current) => (current === length - 1 ? 0 : current + 1))
+  //   }
+  //   timeout.current = setTimeout(nextSlide, 2000)
+
+  //   return function () {
+  //     if (timeout.current) {
+  //       clearTimeout(timeout.current)
+  //     }
+  //   }
+  // }, [current, length])
+
+  const nextSlide = () => {
+    setCurrent(current === length - 1 ? 0 : current + 1)
+  }
+
+  const PrevSlide = () => {
+    setCurrent(current === 0 ? length - 1 : current - 1)
+  }
+
+  if (!Array.isArray(slides) || slides.length <= 0) {
+    return null
+  }
+
   return (
     <HeroSection>
       <HeroWrapper>
-        {slides.map((slides, index) => (
-          <HeroSlide key={index}>
-            <HeroSlider>
-              <HeroImage>
-                <HeroContent>
-                  <h1>{slides.title}</h1>
-                  <p>{slides.price}</p>
-                  <Button
-                    css={`
-                      max-width: 160px;
-                    `}
-                    to={slides.path}
-                    primary='true'
-                  >
-                    {slides.label}
-                    <VscArrowRight />
-                  </Button>
-                </HeroContent>
-              </HeroImage>
-            </HeroSlider>
-          </HeroSlide>
-        ))}
+        {slides.map(
+          (slide, index) =>
+            index === current && (
+              <HeroSlide key={index}>
+                <HeroSlider>
+                  <HeroImage src={slide.image} alt={slide.alt} />
+                  <HeroContent>
+                    <h1>{slide.title}</h1>
+                    <p>{slide.price}</p>
+                    <Button
+                      css={`
+                        max-width: 160px;
+                      `}
+                      to={slide.path}
+                      primary='true'
+                    >
+                      {slides.label}
+                      <Arrow />
+                    </Button>
+                  </HeroContent>
+                </HeroSlider>
+              </HeroSlide>
+            )
+        )}
         <SliderButton>
-          <SliderPrevBtn />
-          <SliderNextBtn />
+          <SliderPrevBtn onClick={PrevSlide} />
+          <SliderNextBtn onClick={nextSlide} />
         </SliderButton>
       </HeroWrapper>
     </HeroSection>
