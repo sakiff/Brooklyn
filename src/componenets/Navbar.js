@@ -14,7 +14,7 @@ const Nav = styled.nav`
   z-index: 100;
   position: fixed;
   width: 100%;
-  background: red;
+  background: rgba(6, 6, 6, 0.8);
 `
 
 const NavLink = css`
@@ -72,11 +72,11 @@ const Navbtn = styled.div`
   }
 `
 
-const Navbar = () => {
+const Navbar = ({ toggle }) => {
   return (
     <Nav>
       <Logo to='/'>BROOKLYN</Logo>
-      <MenuBars />
+      <MenuBars onClick={toggle} />
       <NavMenu>
         {MenuData.map((item, index) => (
           <NavMenuLinks to={item.link} key={index}>
