@@ -1,10 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import { MenuData } from '../data/MenuData'
-import { css } from 'styled-components'
-import { Button } from './Button'
-import { CgMenuRight } from 'react-icons/cg'
+import React, { useState, useEffect } from 'react';
+import styled, { css } from 'styled-components/macro';
+import { Link, useLocation } from 'react-router-dom';
+import { menuData } from '../data/MenuData';
+import { Button } from './Button';
+import Bars from '../images/bars.svg';
 
 const Nav = styled.nav`
   height: 60px;
@@ -14,29 +13,29 @@ const Nav = styled.nav`
   z-index: 100;
   position: fixed;
   width: 100%;
-  background: rgba(6, 6, 6, 0.8);
-`
+`;
 
 const NavLink = css`
   color: #fff;
   display: flex;
   align-items: center;
-  padding: 0rem 1rem;
+  padding: 0 1rem;
   height: 100%;
   cursor: pointer;
   text-decoration: none;
-`
+`;
 
 const Logo = styled(Link)`
   ${NavLink}
-`
+  font-style: italic;
+`;
 
-const MenuBars = styled(CgMenuRight)`
+const MenuBars = styled.i`
   display: none;
 
   @media screen and (max-width: 768px) {
     display: block;
-    color: white;
+    background-image: url(${Bars});
     background-size: contain;
     height: 40px;
     width: 40px;
@@ -46,7 +45,7 @@ const MenuBars = styled(CgMenuRight)`
     right: 0;
     transform: translate(-50%, 25%);
   }
-`
+`;
 
 const NavMenu = styled.div`
   display: flex;
@@ -56,13 +55,13 @@ const NavMenu = styled.div`
   @media screen and (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 const NavMenuLinks = styled(Link)`
   ${NavLink}
-`
+`;
 
-const Navbtn = styled.div`
+const NavBtn = styled.div`
   display: flex;
   align-items: center;
   margin-right: 24px;
@@ -70,27 +69,56 @@ const Navbtn = styled.div`
   @media screen and (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 const Navbar = ({ toggle }) => {
+  const [navbar, setNavbar] = useState(false);
+  const location = useLocation();
+
+  const changeBackground = () => {
+    if (window.pageYOffset >= 60) {
+      setNavbar(true);
+    } else {
+      setNavbar(false);
+    }
+  };
+
+  useEffect(() => {
+    const watchScroll = () => {
+      window.addEventListener('scroll', changeBackground);
+    };
+
+    watchScroll();
+
+    return () => {
+      window.removeEventListener('scroll', changeBackground);
+    };
+  }, []);
+
+  let style = {
+    backgroundColor:
+      navbar || location.pathname !== '/' ? '#CD853F' : 'transparent',
+    transition: '0.4s'
+  };
+
   return (
-    <Nav>
-      <Logo to='/'>BROOKLYN</Logo>
+    <Nav style={style}>
+      <Logo to='/'>ELIXR</Logo>
       <MenuBars onClick={toggle} />
       <NavMenu>
-        {MenuData.map((item, index) => (
+        {menuData.map((item, index) => (
           <NavMenuLinks to={item.link} key={index}>
             {item.title}
           </NavMenuLinks>
         ))}
       </NavMenu>
-      <Navbtn>
+      <NavBtn>
         <Button to='/contact' primary='true'>
           Contact Us
         </Button>
-      </Navbtn>
+      </NavBtn>
     </Nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
