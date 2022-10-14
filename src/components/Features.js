@@ -89,13 +89,13 @@ const Features = () => {
             >
               <h1>Stunning Interior</h1>
               <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Deserunt maxime commodi rem dignissimos, laborum eum beatae
-                harum consectetur possimus architecto!
+                Looking for modern interior designs? From all of interior design
+                magazines, this is one of the best, decorated by the only best
+                in the industry that will continue to inspire.
               </p>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod,
-                voluptatem.
+                Take a look at this stunning and simple hand picked interior
+                designs, choose your favorite that can potentially be yours!
               </p>
               <Button to='/homes'>Learn More</Button>
             </Content>
@@ -112,7 +112,7 @@ const Features = () => {
         </Wrap>
       </Container>
     </Section>
-  );
+  )
 };
 
 export default Features;
